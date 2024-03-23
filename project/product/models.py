@@ -33,3 +33,25 @@ class Category(models.Model):
 
     def __str__(self):
         return self.name.title()
+
+class News(models.Model):
+    name = models.CharField(
+        max_length=50,
+        unique=True, # названия товаров не должны повторяться
+    )
+    description = models.TextField()
+    quantity = models.IntegerField(
+        validators=[MinValueValidator(0)],
+    )
+    # поле категории будет ссылаться на модель категории
+    category = models.ForeignKey(
+        to='Category',
+        on_delete=models.CASCADE,
+        related_name='news', # все продукты в категории будут доступны через поле products
+    )
+    price = models.FloatField(
+        validators=[MinValueValidator(0.0)],
+    )
+
+    def __str__(self):
+        return f'{self.name.title()}: {self.description[:20]}'

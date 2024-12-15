@@ -1,0 +1,7 @@
+{% extends 'flatpages/default.html' %}
+
+{% block content %}
+<h3>У вас нет доступа к этой странице</h3>
+<p></p>
+    <a href="{% url 'product_list' %}"><input type="button" value="Вернуться к главной странице"/></a>
+{% endblock content %}

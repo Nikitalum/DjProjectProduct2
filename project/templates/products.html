@@ -10,16 +10,17 @@ Products
 
 <!-- В контенте на странице мы выводим все товары -->
 {% block content %}
-   <h1>Все товары</h1>
+   <h4>Все товары</h4>
 <!--   <h3>{{ time_now|date:'M d Y' }}</h3>-->
-   <h3>{% current_time '%b %d %Y' %}</h3>
+
    <!-- Если в переменной next_sale будет None,
    то выведется указанный в фильтре текст -->
    <h3> {{ next_sale|default_if_none:"Чуть позже сообщим о распродаже!" }} </h3>
    <!-- Выводим товары, только если они есть с помощью тега if -->
    {% if products %}
-       <table> <!-- Начинаем описывать таблицу -->
-           <tr> <!-- Добавляем строку -->
+<div class="content">
+       <table  width="95%"> <!-- Начинаем описывать таблицу -->
+           <tr bgcolor="#CCCCCC"> <!-- Добавляем строку -->
                <td> <!-- Добавляем ячейку в строку -->
                    Название
                </td>
@@ -35,17 +36,28 @@ Products
                <td>
                    Количество
                </td>
+               <td>
+                   Действия
+               </td>
            </tr>
            {% for product in products %}
+
            <tr>
-               <td>{{ product.name }}</td>
+               <td><a href="{% url 'product_detail' product.id %}">{{ product.name }}</a></td>
                <td>{{ product.description|truncatewords:2 }}</td>
                <td>{{ product.category.name }}</td>
                <td>{{ product.price|currency:"rub" }}</td>
                <td>{{ product.quantity }}</td>
+               <td>
+                   <a href="{% url 'product_update' product.id %}">Изменить</a>
+                   <a href="{% url 'product_delete' product.id %}">Удалить</a>
+               </td>
            </tr>
+
            {% endfor %}
        </table>
+
+</div>
 
    {% else %}
        <!-- Если товаров нет, говорим, что товаров нет ;) -->
@@ -55,10 +67,10 @@ Products
 
    {# Информация о предыдущих страницах #}
    {% if page_obj.has_previous %}
-       <a href="?page=1">1</a>
+       <a href="?{% url_replace page=1 %}">1</a>
        {% if page_obj.previous_page_number != 1 %}
            ...
-           <a href="?page={{ page_obj.previous_page_number }}">{{ page_obj.previous_page_number }}</a>
+           <a href="?{% url_replace page=page_obj.previous_page_number %}">{{ page_obj.previous_page_number }}</a>
        {% endif %}
    {% endif %}
 
@@ -67,10 +79,10 @@ Products
 
    {# Информация о следующих страницах #}
    {% if page_obj.has_next %}
-       <a href="?page={{ page_obj.next_page_number }}">{{ page_obj.next_page_number }}</a>
+       <a href="?{% url_replace page=page_obj.next_page_number %}">{{ page_obj.next_page_number }}</a>
        {% if paginator.num_pages != page_obj.next_page_number %}
            ...
-           <a href="?page={{ page_obj.paginator.num_pages }}">{{ page_obj.paginator.num_pages }}</a>
+           <a href="{% url_replace page=page_obj.paginator.num_pages %}">{{ page_obj.paginator.num_pages }}</a>
        {% endif %}
    {% endif %}
 {% endblock content %}

@@ -3,10 +3,13 @@
 
 <!-- Название у нас будет Product -->
 {% block title %}
-Product
+{{ product.name }}
 {% endblock title %}
 
 <!-- В контенте на странице мы выводим сам товар, идентификатор которого был передан в url -->
 {% block content %}
-<h1>{{ product }}</h1>
+<div style="padding: 25px;">
+<h5>{{ product.name }}</h5>
+<p>{{ product.description }}</p>
+</div>
 {% endblock content %}

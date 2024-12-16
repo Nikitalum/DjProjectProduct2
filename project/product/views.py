@@ -6,7 +6,7 @@ from .models import Product
 from .filters import ProductFilter
 from .forms import ProductForm, ProductCrForm
 from .models import News
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 
 
 class ProductsList(ListView):
@@ -60,8 +60,8 @@ def create_product(request):
 
 
 # Добавляем новое представление для создания товаров.
-class ProductCreate(LoginRequiredMixin, CreateView):
-    raise_exception = True
+class ProductCreate(PermissionRequiredMixin, CreateView):
+    permission_required = ('product.add_product',)
     # Указываем нашу разработанную форму
     form_class = ProductCrForm
     # модель товаров
@@ -71,15 +71,15 @@ class ProductCreate(LoginRequiredMixin, CreateView):
     success_url = reverse_lazy('product_list')
 
 
-class ProductUpdate(LoginRequiredMixin, UpdateView):
-    raise_exception = True
+class ProductUpdate(PermissionRequiredMixin, UpdateView):
+    permission_required = ('product.change_product',)
     form_class = ProductForm
     model = Product
     template_name = 'product_edit.html'
 
 
-class ProductDelete(LoginRequiredMixin, DeleteView):
-    raise_exception = True
+class ProductDelete(PermissionRequiredMixin, DeleteView):
+    permission_required = ('product.delete_product',)
     model = Product
     template_name = 'product_delete.html'
     success_url = reverse_lazy('product_list')
